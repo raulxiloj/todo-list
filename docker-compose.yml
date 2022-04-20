@@ -10,5 +10,11 @@ services:
       - ./app:/app
     command: >
       sh -c "python manage.py runserver 0.0.0.0:8000"
+    environment:
+      - DB_HOST=db-mysql-do-user-11403364-0.b.db.ondigitalocean.com
+      - DB_NAME=todo
+      - DB_USER=doadmin
+      - DB_PASS=AVNS_08ZdNCrqthdV-t-
+      - DB_PORT=25060
 
 #docker-compose run api sh -c "django-admin startproject app ."

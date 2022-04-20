@@ -3,6 +3,7 @@ FROM python:3.10-alpine
 ENV PYTHONUNBUFFERED 1
 
 COPY ./requirements.txt /requirements.txt
+RUN apk add --update --no-cache gcc libc-dev mariadb-dev 
 RUN pip install -r /requirements.txt
 
 RUN mkdir /app
