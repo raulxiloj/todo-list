@@ -12,3 +12,12 @@ class ModelTests(TestCase):
         )
 
         self.assertEqual(str(tag), tag.name)
+
+    def test_task_str(self):
+        """Test the task string"""
+        task = models.Task.objects.create(
+            description='Finish this API',
+            status=False
+        )
+
+        self.assertEqual(str(task), task.description)
