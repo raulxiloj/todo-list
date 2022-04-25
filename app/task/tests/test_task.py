@@ -44,3 +44,34 @@ class TaskApiTests(TestCase):
 
         self.assertEqual(res.status_code, status.HTTP_200_OK)
         self.assertEqual(res.data, serializer.data)
+
+    def test_create_basic_task(self):
+        """Task without tags"""
+        data = {
+            'description': 'Take a walk with the dogs'
+        }
+
+        res = self.client.post(TASK_URL, data)
+
+        self.assertEqual(res.status_code, status.HTTP_201_CREATED)
+        task = Task.objects.get(id=res.data['id'])
+        self.assertEqual(data['description'], task.description)
+
+    def test_create_task_with_tags(self):
+        """Test creating a task with tags"""
+        tag1 = sample_tag()
+        tag2 = sample_tag('Work')
+
+        data = {
+            'description': 'Django tech',
+            'tags': [tag1.id, tag2.id]
+        }
+
+        res = self.client.post(TASK_URL, data)
+
+        self.assertEqual(res.status_code, status.HTTP_201_CREATED)
+        task = Task.objects.get(id=res.data['id'])
+        tags = task.tags.all()
+        self.assertEqual(tags.count(), 2)
+        self.assertIn(tag1, tags)
+        self.assertIn(tag2, tags)

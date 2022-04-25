@@ -15,7 +15,7 @@ class TaskViewSet(viewsets.GenericViewSet, mixins.ListModelMixin,
                   mixins.CreateModelMixin):
     """Manage task in db"""
     queryset = Task.objects.all()
-    serializer_class = serializers.TagSerializer
+    serializer_class = serializers.TaskSerializer
 
     def get_serializer_class(self):
         """Return appropiate serializer class"""
