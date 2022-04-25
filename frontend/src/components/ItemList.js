@@ -15,10 +15,18 @@ export const ItemList = () => {
 
   return (
     <>
+    
       <form className='custom-form'  onSubmit={addItem}>
         <input className='custom' placeholder='Add a new item' autoFocus />
-        <button className='custom' onClick={addItem}><i className="bi bi-plus-square-fill"></i></button> 
+        <button className='custom' onClick={addItem}><i className="bi bi-plus-square-fill"></i></button>
+        <div className='select'>
+          <select className='filter-todo'>
+            <option value="Home">Learning</option>
+            <option value="Learning">Home</option>
+          </select>
+        </div> 
       </form>
+
       <div className='container'>
         <table className='table table-stripped mt-3 text-light'>
           <thead>

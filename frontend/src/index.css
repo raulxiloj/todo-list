@@ -38,3 +38,33 @@ form button:hover {
   background: #198754;
   color: white;
 }
+
+/*CUSTOM SELECTOR */
+select {
+  border: 0;
+  cursor: pointer;
+  outline: 0;
+  width: 11rem;
+}
+
+.filter-todo {
+  padding: 0.7rem;
+}
+
+/* Custom Select */
+.select {
+  margin: 1rem;
+  position: relative;
+}
+
+/* Arrow */
+.select::after {
+  content: "\25BC";
+  position: absolute;
+  top: 0;
+  right: 0;
+  padding: .7rem;
+  background: #516395;;
+  cursor: pointer;
+  pointer-events: none;
+}
