@@ -5,6 +5,7 @@ from task import views
 
 router = DefaultRouter()
 router.register('tags', views.TagViewSet)
+router.register('tasks', views.TaskViewSet)
 
 app_name = 'task'
 
