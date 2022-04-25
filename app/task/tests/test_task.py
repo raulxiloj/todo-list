@@ -75,3 +75,37 @@ class TaskApiTests(TestCase):
         self.assertEqual(tags.count(), 2)
         self.assertIn(tag1, tags)
         self.assertIn(tag2, tags)
+
+    def test_partial_update_task(self):
+        """Test updating a task with patch"""
+        task = sample_task()
+        task.tags.add(sample_tag())
+
+        new_tag = sample_tag(name='University')
+        data = {
+            'description': 'Do homework',
+            'tags': [new_tag.id]
+        }
+
+        self.client.patch(reverse('task:task-detail', args=[task.id]), data)
+
+        task.refresh_from_db()
+        self.assertEqual(task.description, data['description'])
+        tags = task.tags.all()
+        self.assertEqual(len(tags), 1)
+        self.assertIn(new_tag, tags)
+
+    def test_full_update_task(self):
+        """Test updating a task with put"""
+        task = sample_task()
+        task.tags.add(sample_tag())
+
+        data = {
+            'description': 'wash dishes',
+        }
+
+        self.client.put(reverse('task:task-detail', args=[task.id]), data)
+
+        task.refresh_from_db()
+        self.assertEqual(task.description, data['description'])
+        self.assertEqual(len(task.tags.all()), 0)

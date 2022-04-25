@@ -11,8 +11,7 @@ class TagViewSet(viewsets.GenericViewSet, mixins.ListModelMixin,
     serializer_class = serializers.TagSerializer
 
 
-class TaskViewSet(viewsets.GenericViewSet, mixins.ListModelMixin,
-                  mixins.CreateModelMixin):
+class TaskViewSet(viewsets.ModelViewSet):
     """Manage task in db"""
     queryset = Task.objects.all()
     serializer_class = serializers.TaskSerializer
