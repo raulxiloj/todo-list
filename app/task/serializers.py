@@ -12,9 +12,23 @@ class TagSerializer(serializers.ModelSerializer):
         read_only_fields = ('id',)
 
 
-class TaskSerializer(serializers.ModelSerializer):
-    """Serialize a task"""
+class TaskListSerializer(serializers.ModelSerializer):
+    """Serialize a task with detail"""
 
+    tags = serializers.PrimaryKeyRelatedField(
+        many=True,
+        queryset=Tag.objects.all()
+    )
+    tags = TagSerializer(many=True, )
+
+    class Meta:
+        model = Task
+        fields = ('id', 'description', 'status', 'tags')
+        read_only_fields = ('id',)
+
+
+class TaskSerializer(serializers.ModelSerializer):
+    """Serialize a task without getting the detail data"""
     tags = serializers.PrimaryKeyRelatedField(
         many=True,
         queryset=Tag.objects.all()

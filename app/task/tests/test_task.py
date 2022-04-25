@@ -4,11 +4,16 @@ from django.urls import reverse
 from rest_framework import status
 from rest_framework.test import APIClient
 
-from core.models import Task
+from core.models import Task, Tag
 
-from task.serializers import TaskSerializer
+from task.serializers import TaskListSerializer
 
 TASK_URL = reverse('task:task-list')
+
+
+def sample_tag(name='Learning'):
+    """Create and return a sample tag"""
+    return Tag.objects.create(name=name)
 
 
 def sample_task(**params):
@@ -29,12 +34,13 @@ class TaskApiTests(TestCase):
 
     def test_retrieve_tasks(self):
         sample_task()
-        sample_task(description='Watch an episode of The Office')
+        task = sample_task(description='Watch an episode of The Office')
+        task.tags.add(sample_tag())
 
         res = self.client.get(TASK_URL)
 
         tasks = Task.objects.all().order_by('id')
-        serializer = TaskSerializer(tasks, many=True)
+        serializer = TaskListSerializer(tasks, many=True)
 
         self.assertEqual(res.status_code, status.HTTP_200_OK)
         self.assertEqual(res.data, serializer.data)
