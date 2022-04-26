@@ -1,21 +1,26 @@
 import React from 'react'
 
-export const Item = ({ id, text }) => {
+export const Item = ({ task, updateItemDesc, patchTask, deleteTask }) => {
 
-    const updateItem = (event, id) => {
-        console.log(event, id)
+    const changeStatus = (task) => {
+        task.status = !task.status;
+        patchTask(null, task)
     }
 
     return (
-        <tr key={id}>
+        <tr key={task.id}>
             <td></td>
             <td>
-                <form>
-                    <input className="form-control" autoComplete="off" value={text} onChange={(event) => updateItem(event, id)} />
+                <form onSubmit={(e) => patchTask(e, task)}>
+                    <input className="form-control" autoComplete="off" value={task.description} onChange={(event) => updateItemDesc(event, task.id)}  />
                 </form>
             </td>
             <td>
-                <span className="badge bg-success">Success</span>
+                {
+                    task.status ? 
+                    <span className="badge bg-success">Done</span>
+                    : <span className="badge bg-dark">Pending</span>
+                }
             </td>
             <td>
                 <button className='btn btn-warning'>
@@ -23,7 +28,12 @@ export const Item = ({ id, text }) => {
                 </button>
             </td>
             <td>
-                <button className='btn btn-danger'>
+                <button className='btn btn-success' onClick={() => changeStatus(task)}>
+                    <i className="bi bi-check"></i>
+                </button>
+            </td>
+            <td>
+                <button className='btn btn-danger' onClick={() => deleteTask(task)}>
                     <i className="bi bi-trash"></i>
                 </button>
             </td>
