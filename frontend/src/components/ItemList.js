@@ -1,8 +1,9 @@
-import React, { useEffect, useState } from 'react'
-import { Item } from './Item'
-import { deleteRequest, getRequest, patchRequest, postRequest } from '../api'
-import { getInitialState } from '../helpers/task'
-import { Form } from './Form'
+import React, { useEffect, useState } from 'react';
+import { Item } from './Item';
+import { deleteRequest, getRequest, patchRequest, postRequest } from '../api';
+import { getInitialState } from '../helpers/task';
+import { Form } from './Form';
+import Swal from 'sweetalert2';
 
 export const ItemList = () => {
 
@@ -12,13 +13,13 @@ export const ItemList = () => {
 
   const getTags = async () => {
     const res = await getRequest('tags')
-      setTags(res.data);
-      setNewTask(newTask => {
-        return {
-          ...newTask,
-          tags: [res.data[0].id] 
-        }
-      }); 
+    setTags(res.data);
+    setNewTask(newTask => {
+      return {
+        ...newTask,
+        tags: [res.data[0].id]
+      }
+    });
   }
 
   const getTasks = async () => {
@@ -29,17 +30,22 @@ export const ItemList = () => {
   useEffect(() => {
     getTags()
   }, []);
-  
+
   useEffect(() => {
     getTasks();
   }, []);
 
   const addItem = async (e) => {
     e.preventDefault();
-    if(newTask.description.trim().length > 0)  {
-      await postRequest('tasks/', newTask);
-      setNewTask(getInitialState(newTask.tags));
-      getTasks();
+    if (newTask.description.trim().length > 0) {
+      Swal.fire('Creating');
+      Swal.showLoading();
+      postRequest('tasks/', newTask).then(res => {
+        Swal.close();
+        setNewTask(getInitialState(newTask.tags));
+        getTasks();
+        Swal.fire('Success', 'Task added correctly', 'success');
+      });
     }
   }
 
@@ -62,28 +68,35 @@ export const ItemList = () => {
   }
 
   const deleteTask = async (task) => {
-    await deleteRequest(`tasks/${task.id}`);
-    getTasks();
+    Swal.fire('Deleting');
+    Swal.showLoading();
+    deleteRequest(`tasks/${task.id}`)
+      .then(res => {
+        console.log(res);
+        Swal.close();
+        getTasks();
+      });
   }
 
   const createTasks = (task) => {
-    return <Item  task={task} key={task.id}  updateItemDesc={updateItemDesc} patchTask={patchTask} deleteTask={deleteTask} />
+    return <Item task={task} key={task.id} updateItemDesc={updateItemDesc} patchTask={patchTask} deleteTask={deleteTask} />
   }
 
   return (
     <>
-    <Form addItem={addItem} setNewTask={setNewTask} newTask={newTask} tags={tags} />       
+      <Form tasks={tasks} setTasks={setTasks} addItem={addItem} setNewTask={setNewTask} newTask={newTask} tags={tags} />
 
       <div className='container'>
-        <table className='table table-stripped mt-3 text-light'>
+        <div className='row'>
+          <div className='col-md-8 offset-md-2'>
+          <table className='table table-stripped mt-3 text-light'>
           <thead>
-            <tr>
-              <th></th>
-              <th>Description</th>
-              <th>Status</th>
-              <th>Edit</th>
-              <th>Done</th>
-              <th>Delete</th>
+            <tr className='d-flex'>
+              <th className='col-6'>Description</th>
+              <th className='col-2 text-center'>Status</th>
+              {/* <th>Edit</th> */}
+              <th className='col-2 text-center'>Done</th>
+              <th className='col-2 text-center'>Delete</th>
             </tr>
           </thead>
           <tbody>
@@ -92,6 +105,9 @@ export const ItemList = () => {
             }
           </tbody>
         </table>
+          </div>
+        </div>
+        
       </div>
     </>
   );
